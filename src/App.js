@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import UserManagement from './components/UserManagement';
+import InventoryManagement from './components/InventoryManagement';
+import ShoppingListManagement from './components/ShoppingListManagement';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <h1>Inventory Management System</h1>
+        <nav>
+          <ul>
+            <li><Link to="/users">User Management</Link></li>
+            <li><Link to="/inventory">Inventory Management</Link></li>
+            <li><Link to="/shopping-list">Shopping List Management</Link></li>
+          </ul>
+        </nav>
+        <Routes>
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/inventory" element={<InventoryManagement />} />
+          <Route path="/shopping-list" element={<ShoppingListManagement />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
