@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserManagement = () => {
   const [username, setUsername] = useState('');
@@ -7,37 +8,41 @@ const UserManagement = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
-  // 注册用户方法
   const registerUser = async () => {
     try {
       const response = await axios.post('http://localhost:8080/api/users/register', {
         username,
         password,
         email,
-        role: 'user'  // 默认注册为普通用户
+        role: 'user'  
       });
       setMessage(`User ${response.data.username} registered successfully!`);
     } catch (error) {
-      setMessage('Error registering user.');
+      if (error.response || error.response.data === 'Email is already registered!') {
+        setMessage('Email is already registered!');
+      } else {
+        setMessage('Error registering user.');
+      }
     }
   };
-
   return (
     <div>
       <h2>User Management</h2>
-      <div>
-        <label>Username:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
-      <div>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
-      <button onClick={registerUser}>Register User</button>
+      <form>
+        <div className="mb-3">
+          <label className="form-label">Username</label>
+          <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Password</label>
+          <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Email</label>
+          <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+        <button type="button" className="btn btn-primary" onClick={registerUser}>Register User</button>
+      </form>
       <p>{message}</p>
     </div>
   );

@@ -59,5 +59,4 @@ const ShoppingListManagement = () => {
     </div>
   );
 };
-
 export default ShoppingListManagement;
