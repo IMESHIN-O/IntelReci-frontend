@@ -10,7 +10,9 @@ const InventoryManagement = () => {
   // 获取所有库存项方法
   const getAllInventory = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/inventory/all?userId=1');
+      const userId = localStorage.getItem('userId');
+      const url = `http://localhost:8080/api/inventory/all/${userId}`;
+      const response = await axios.get(url);
       setInventory(response.data);
     } catch (error) {
       setMessage('Error retrieving inventory.');
@@ -20,13 +22,14 @@ const InventoryManagement = () => {
   // 添加库存项方法
   const addItem = async () => {
     try {
+      const userId = localStorage.getItem('userId');
       const response = await axios.post('http://localhost:8080/api/inventory/add', {
         itemName,
         quantity,
         unit: 'pieces',
         category: 'General',
         expirationDate: '2024-12-31',
-        user: { id: 1 }
+        user: { id: userId , email:''}
       });
       setMessage(`Item ${response.data.itemName} added successfully!`);
       getAllInventory();  // 重新加载库存数据
@@ -49,7 +52,7 @@ const InventoryManagement = () => {
       </div>
       <div>
         <label>Quantity:</label>
-        <input type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
+        <input type="number" step="0.01" value={quantity} onChange={(e) => setQuantity(parseFloat(e.target.value))} />
       </div>
       <button onClick={addItem}>Add Item</button>
       <p>{message}</p>

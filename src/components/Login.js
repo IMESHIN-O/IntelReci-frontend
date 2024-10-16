@@ -1,5 +1,7 @@
+// src/components/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom'; // 导入 Link 组件
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -12,7 +14,9 @@ const Login = ({ onLogin }) => {
         email,
         password,
       });
-      // 假设服务器返回一个 token 或用户信息
+      const { token, userId } = response.data;
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('userId', userId);
       onLogin(response.data.token);
       setMessage('Login successful!');
     } catch (error) {
@@ -33,6 +37,7 @@ const Login = ({ onLogin }) => {
       </div>
       <button onClick={handleLogin}>Login</button>
       <p>{message}</p>
+      <p>Don't have an account? <Link to="/register">Register here</Link></p>
     </div>
   );
 };
