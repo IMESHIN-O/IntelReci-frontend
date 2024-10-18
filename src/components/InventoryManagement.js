@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import nutritionMap from './NutritionData'; // 假设 nutritionMap 存放在 ../data/nutritionMap.js
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const InventoryManagement = () => {
   const [inventory, setInventory] = useState([]);
   const [itemName, setItemName] = useState('');
-  const [itemNames, setItemNames] = useState([]); // 新增状态，保存所有可用的 item name
+  const [itemNames, setItemNames] = useState([]); // 用于保存所有可用的 item name
   const [quantity, setQuantity] = useState(0);
-  const [expirationDate, setExpirationDate] = useState(''); // 新增状态保存过期时间
-  const [editItemId, setEditItemId] = useState(null); // 用于编辑库存
-  const [editQuantity, setEditQuantity] = useState(0); // 新的数量值
+  const [expirationDate, setExpirationDate] = useState('');
+  const [editItemId, setEditItemId] = useState(null); 
+  const [editQuantity, setEditQuantity] = useState(0); 
   const [message, setMessage] = useState('');
+
+  // 获取 nutrition_map 中的所有食物名称
+  const loadItemNames = () => {
+    const names = Array.from(nutritionMap.keys()); // 从 nutrition_map 中提取所有的 key (食物名称)
+    setItemNames(names);
+  };
 
   // 获取所有库存项方法
   const getAllInventory = async () => {
@@ -24,16 +31,6 @@ const InventoryManagement = () => {
     }
   };
 
-  // 获取所有 nutrition_facts 中的食物名称
-  const getItemNames = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/nutrition-facts/names'); // 从后端获取 nutrition_facts 的名称
-      setItemNames(response.data); // 保存到状态
-    } catch (error) {
-      setMessage('Error retrieving item names from nutrition facts.');
-    }
-  };
-
   // 添加库存项方法
   const addItem = async () => {
     try {
@@ -41,9 +38,9 @@ const InventoryManagement = () => {
       const response = await axios.post('http://localhost:8080/api/inventory/add', {
         itemName,
         quantity,
-        unit: 'grams',  
+        unit: 'grams',
         category: 'General',
-        expirationDate, // 将用户输入的过期时间发送到后端
+        expirationDate,
         user: { id: userId, email: '' }
       });
       setMessage(`Item ${response.data.itemName} added successfully!`);
@@ -53,11 +50,11 @@ const InventoryManagement = () => {
     }
   };
 
-  // 更新库存项数量方法（通过inventory的id）
+  // 更新库存项数量方法
   const updateItemQuantity = async (id) => {
     try {
       const response = await axios.put(`http://localhost:8080/api/inventory/update/${id}`, {
-        quantity: editQuantity, // 更新时发送新的数量值
+        quantity: editQuantity,
       });
       setMessage(`Item ${response.data.itemName} updated successfully!`);
       setEditItemId(null); // 结束编辑状态
@@ -78,10 +75,10 @@ const InventoryManagement = () => {
     }
   };
 
-  // 初始化加载库存数据和可用 item name 列表
+  // 初始化加载库存数据和 nutrition_map 中的 item name 列表
   useEffect(() => {
     getAllInventory();
-    getItemNames(); // 加载 nutrition_facts 的 item name
+    loadItemNames(); // 从前端 nutrition_map 加载食物名称
   }, []);
 
   return (
