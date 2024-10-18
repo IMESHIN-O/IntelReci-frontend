@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import InventoryManagement from './components/InventoryManagement';
 import ShoppingListManagement from './components/ShoppingListManagement';
+import BMRCalculator from './components/BMRCalculator'; // Import the BMR component
 import Login from './components/Login';
-import Register from './components/Register'; // 确保你有 Register 组件
-import 'bootstrap/dist/css/bootstrap.min.css'; // 引入 Bootstrap 样式
+import Register from './components/Register'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogin = (token) => {
-    // 存储 token 或登录信息到本地存储
     localStorage.setItem('authToken', token);
     setIsAuthenticated(true);
   };
@@ -25,21 +25,21 @@ const App = () => {
       <div className="d-flex">
         {isAuthenticated ? (
           <>
-            {/* Sidebar */}
             <div className="bg-light border-right" id="sidebar-wrapper">
               <div className="sidebar-heading">Inventory Management System</div>
               <div className="list-group list-group-flush">
                 <Link to="/inventory" className="list-group-item list-group-item-action bg-light">Inventory Management</Link>
                 <Link to="/shopping-list" className="list-group-item list-group-item-action bg-light">Shopping List Management</Link>
+                <Link to="/bmr-calculator" className="list-group-item list-group-item-action bg-light">BMR Calculator</Link> {/* Add BMR link */}
                 <button className="list-group-item list-group-item-action bg-light" onClick={handleLogout}>Logout</button>
               </div>
             </div>
 
-            {/* Main content */}
             <div id="page-content-wrapper" className="p-4">
               <Routes>
                 <Route path="/inventory" element={<InventoryManagement />} />
                 <Route path="/shopping-list" element={<ShoppingListManagement />} />
+                <Route path="/bmr-calculator" element={<BMRCalculator />} /> {/* Add BMR route */}
               </Routes>
             </div>
           </>

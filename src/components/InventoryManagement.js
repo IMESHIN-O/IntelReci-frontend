@@ -24,12 +24,13 @@ const InventoryManagement = () => {
     }
   };
 
+  // 获取所有 nutrition_facts 中的食物名称
   const getItemNames = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/inventory/names');
+      const response = await axios.get('http://localhost:8080/api/nutrition-facts/names'); // 从后端获取 nutrition_facts 的名称
       setItemNames(response.data); // 保存到状态
     } catch (error) {
-      setMessage('Error retrieving item names.');
+      setMessage('Error retrieving item names from nutrition facts.');
     }
   };
 
@@ -80,7 +81,7 @@ const InventoryManagement = () => {
   // 初始化加载库存数据和可用 item name 列表
   useEffect(() => {
     getAllInventory();
-    getItemNames(); // 加载可用的 item name
+    getItemNames(); // 加载 nutrition_facts 的 item name
   }, []);
 
   return (
@@ -94,7 +95,7 @@ const InventoryManagement = () => {
           onChange={(e) => setItemName(e.target.value)}
         >
           <option value="">Select an item</option>
-          {itemNames.map((name,index) => (
+          {itemNames.map((name, index) => (
             <option key={index} value={name}>
               {name}
             </option>
